@@ -6,9 +6,18 @@ require('chai')
     .should()
 
 contract('EthSwap', (accounts) => {
+
+    describe('Token deployment', async () => {
+        it('contract has a name' , async () => {
+            let token = await Token.new()
+            const name = await token.name()
+            assert.equal(name, 'DApp Token')
+        })
+    })
+
     describe('EthSwap deployment', async () => {
         it('contract has a name' , async () => {
-            ethSwap = await EthSwap.new()
+            let ethSwap = await EthSwap.new()
             const name = await ethSwap.name()
             assert.equal(name, 'EthSwap Instant Exchange')
         })
