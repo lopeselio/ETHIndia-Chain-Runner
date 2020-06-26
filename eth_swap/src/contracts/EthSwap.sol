@@ -32,12 +32,13 @@ contract EthSwap{
         emit TokenPurchased(msg.sender, address(token), tokenAmount, rate);
     }
 
-    function sellTokens(uint _amount) {
+    function sellTokens(uint _amount) public {
         // Calculate the amount of Ether to redeem
         uint etherAmount = _amount / rate;
-        
+
         // Perform sale
-        msg.sender.transfer(etherAmount)
+        token.transferFrom(msg.sender, address(this), _amount);
+        msg.sender.transfer(etherAmount);
     }
 }
 

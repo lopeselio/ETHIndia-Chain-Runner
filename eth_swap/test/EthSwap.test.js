@@ -70,5 +70,21 @@ contract('EthSwap', ([deployer, investor]) => {
                 assert.equal(event.rate.toString(), '100')
             })
         })
+
+        describe('sellTokens()', async () => {
+            let result
+            before(async () => {
+                // Investor must approve tokens before the purchase
+                await token.approve(ethSwap.address, tokens('100'), {from: investor}) 
+
+                // Investor sells tokens
+                result = await ethSwap.sellTokens(tokens('100'),{from: investor})               
+            })
+            
+            it('Allows user to instantly purchase tokens from ethSwap for a fixed price', async () => {
+                let investorBalance = await token.balanceOf(investor)
+                assert.equal(investorBalance.toString(), tokens('0'))
+            })
+        })
     })
 })
