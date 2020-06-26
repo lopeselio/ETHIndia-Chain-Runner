@@ -48,7 +48,7 @@ contract('EthSwap', ([deployer, investor]) => {
             let result
             before(async () => {
                 // purchase tokens from investor before each example
-                result = await ethSwap.buyTokens({from: investor, value: web3.utils.toWei('1', 'ether')})               
+                result = await ethSwap.buyTokens({from: investor, value: web3.utils.toWei('1', 'ether')})           
             })
             
             it('Allows user to instantly purchase tokens from ethSwap for a fixed price', async () => {
@@ -81,9 +81,27 @@ contract('EthSwap', ([deployer, investor]) => {
                 result = await ethSwap.sellTokens(tokens('100'),{from: investor})               
             })
             
-            it('Allows user to instantly purchase tokens from ethSwap for a fixed price', async () => {
+            it('Allows user to instantly sell tokens to ethSwap for a fixed price', async () => {
                 let investorBalance = await token.balanceOf(investor)
                 assert.equal(investorBalance.toString(), tokens('0'))
+
+                //Check ethSwap balance after purchase
+                let ethSwapBalance
+                ethSwapBalance = await token.balanceOf(ethSwap.address)
+                assert.equal(ethSwapBalance.toString(), tokens('1000000'))
+                ethSwapBalance = await web3.eth.getBalance(ethSwap.address)
+                assert.equal(ethSwapBalance.toString(), web3.utils.toWei('0', 'Ether'))
+            
+                // Check logs to ensure that event was emitted with correct data
+                const event = result.logs[0].args
+                assert.equal(event.account, investor)
+                assert.equal(event.token, token.address)
+                assert.equal(event.amount.toString(), tokens('100').toString())
+                assert.equal(event.rate.toString(), '100')
+
+                //FAILURE: Investors can't sell more tokens than they actually have
+                await ethSwap.sellTokens(tokens('500'), { from: investor }).should.be.rejected;
+                                
             })
         })
     })
