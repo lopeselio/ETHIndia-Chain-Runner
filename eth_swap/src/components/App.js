@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import logo from '../logo.png';
 import Web3 from 'web3'
+import Token from '../abis/Token.json'
+import EthSwap from '../abis/EthSwap.json'
 import './App.css';
 import Navbar from './Navbar'
 
@@ -21,7 +23,7 @@ class App extends Component {
 
     const ethBalance = await web3.eth.getBalance(this.state.account)
     this.setState({ ethBalance: ethBalance })
-    console.log(this.state.ethBalance)
+    // console.log(this.state.ethBalance)
   }
 
   async loadWeb3() {
@@ -54,7 +56,7 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Navbar />        
+        <Navbar account={this.state.account} />        
         <div className="container-fluid mt-5">
           <div className="row">
             <main role="main" className="col-lg-12 d-flex text-center">
