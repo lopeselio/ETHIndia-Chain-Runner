@@ -11,7 +11,7 @@ contract EthSwap{
         token = _token;
     }
 
-    function buytokens() public payable {
+    function buyTokens() public payable {
         // redemption rate = number of tokens they receive for one ether
         //amount of ethereum * redemption rate
         // Calculate the number of token to buy
